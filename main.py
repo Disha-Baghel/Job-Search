@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import sqlite3
 
 # URL = "https://www.glassdoor.co.in/Job/software-engineer-intern-jobs-SRCH_KO0,24.htm?minRating=4.0"
 URL = "https://www.glassdoor.co.in/Job/software-jobs-SRCH_KO0,8.htm"
@@ -17,6 +18,19 @@ links = []
 company_names = []
 locations = []
 
+conn = sqlite3.connect('jobsdata.db')
+cursor = conn.cursor()
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS job_listings(
+               title TEXT,
+               company TEXT,
+               location TEXT,
+               url TEXT 
+               )
+         ''')
+
+conn.commit()
+
 for element in soup.find_all('div', attrs={'class': 'jobCard JobCard_jobCardContent__0_4vj'}):
 
     job_titles.append(element.find('a', attrs={'class': 'JobCard_seoLink__WdqHZ'}).text)
@@ -24,7 +38,10 @@ for element in soup.find_all('div', attrs={'class': 'jobCard JobCard_jobCardCont
     links.append(element.find('a', attrs={'class': 'JobCard_seoLink__WdqHZ'})['href'])
     locations.append(element.find('div', attrs={'class': 'JobCard_location__N_iYE'}).text)
 
+    cursor.execute('''INSERT INTO job_listings(title, company, location, url) VALUES(?,?,?,?)''', (job_titles[-1], company_names[-1], locations[-1], links[-1]))
+    conn.commit()
+
 # print(job_titles)
 # print(company_names)
 # print(links)
-print(locations)
+# print(locations)
