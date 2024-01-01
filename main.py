@@ -4,6 +4,7 @@ import sqlite3
 
 # URL = "https://www.glassdoor.co.in/Job/software-engineer-intern-jobs-SRCH_KO0,24.htm?minRating=4.0"
 URL = "https://www.glassdoor.co.in/Job/software-jobs-SRCH_KO0,8.htm"
+# URL = "https://www.glassdoor.co.in/Job/index.htm"
 headers = {'User-Agent': "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"}
 
 page = requests.get(URL, headers=headers)
@@ -21,6 +22,7 @@ locations = []
 conn = sqlite3.connect('jobsdata.db')
 cursor = conn.cursor()
 
+cursor.execute("DELETE FROM job_listings")
 cursor.execute('''CREATE TABLE IF NOT EXISTS job_listings(
                title TEXT,
                company TEXT,
@@ -42,6 +44,6 @@ for element in soup.find_all('div', attrs={'class': 'jobCard JobCard_jobCardCont
     conn.commit()
 
 # print(job_titles)
-# print(company_names)
+print(company_names)
 # print(links)
 # print(locations)
