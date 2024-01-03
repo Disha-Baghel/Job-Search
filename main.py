@@ -48,6 +48,7 @@ for element in soup.find_all('div', attrs={'class': 'jobCard JobCard_jobCardCont
 # print(company_names)
 # print(links)
 # print(locations)
-
+count = 1
 for entry in cursor.execute("SELECT * FROM job_listings"):
-    print(entry)
+    print(count,". ",entry)
+    count += 1
